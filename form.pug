@@ -1,0 +1,37 @@
+doctype html
+html(lang="ja")
+  head
+    meta(charset="UTF-8")
+    title 応募フォーム(仮)
+    style(type="text/css").
+      body{
+        background-color: #87CEFA;
+        text-align:center
+      }
+  body
+    h1 このようなキャンペーンがあったとしたなら・・・<br>どの一品をお選びになりますか？
+    h2 
+     form(method="post" action=path)
+      select name="area"
+      option value="hokkai" 北海道
+      option value="hon" 本州
+      option value="shi" 四国
+      oprion value="kyu-o" 九州・沖縄
+      span ニックネーム:
+      input(type="text" name="ニックネーム")
+      br
+      input(type="radio" name="favorite" value=firstItem)
+      span #{firstItem}
+      input(type="radio" name="favorite" value=secondItem)
+      span #{secondItem}
+      input(type="radio" name="favorite" value=thirdItem)
+      span #{thirdItem}
+      br
+      input(type="radio" name="favorite" value=fourthItem)
+      span #{fourthItem}
+      input(type="radio" name="favorite" value=fifthItem)
+      span #{fifthItem}
+      input(type="radio" name="favorite" value=sixthItem)
+      span #{sixthItem}
+      br
+      button(type="submit") 決定
