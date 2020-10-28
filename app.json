@@ -1,7 +1,7 @@
 {
   "name": "Application",
   "description": "Application form for tasty foods.",
-  "repository": "https://github.com/progedu/node-js-http-3016",
+  "repository": " https://happykumamoto.github.io/applicationForm/",
   "logo": "",
   "keywords": ["node"],
   "image": "heroku/nodejs"
