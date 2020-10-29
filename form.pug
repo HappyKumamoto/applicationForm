@@ -1,37 +1,70 @@
-doctype html
-html(lang="ja")
-  head
-    meta(charset="UTF-8")
-    title 応募フォーム(仮)
-    style(type="text/css").
-      body{
-        background-color: #87CEFA;
-        text-align:center
-      }
-  body
-    h1 このようなキャンペーンがあったとしたなら・・・<br>どの一品をお選びになりますか？
-    h2 
-     form(method="post" action=path)
-      select name="area"
-      option value="hokkai" 北海道
-      option value="hon" 本州
-      option value="shi" 四国
-      oprion value="kyu-o" 九州・沖縄
-      span ニックネーム:
-      input(type="text" name="ニックネーム")
-      br
-      input(type="radio" name="favorite" value=firstItem)
-      span #{firstItem}
-      input(type="radio" name="favorite" value=secondItem)
-      span #{secondItem}
-      input(type="radio" name="favorite" value=thirdItem)
-      span #{thirdItem}
-      br
-      input(type="radio" name="favorite" value=fourthItem)
-      span #{fourthItem}
-      input(type="radio" name="favorite" value=fifthItem)
-      span #{fifthItem}
-      input(type="radio" name="favorite" value=sixthItem)
-      span #{sixthItem}
-      br
-      button(type="submit") 決定
+'use strict';
+const http = require('http');
+const pug = require('pug');
+const server = http
+  .createServer((req, res) => {
+　　　　console.info('Requested by ' + req.connection.remoteAddress);
+    res.writeHead(200, {
+      'Content-Type': 'text/html; charset=utf-8'
+    });
+
+    switch (req.method) {
+      case 'GET':
+        if (req.url === '/applicationForm/tasty-red') {
+          res.write(
+            pug.renderFile('./form.pug', {
+              path: req.url,
+              firstItem: 'とまと',
+              secondItem: 'すいか',
+              thirdItem: 'いちご',
+              fourthItem: '赤牛',
+              fifthItem: '天草大王(赤鶏)',
+              sixthItem: '車海老'
+            })
+          );
+        } else if (req.url === '/applicationForm/tasty-black') {
+          res.write(
+            pug.renderFile('./form.pug', {
+              path: req.url,
+              firstItem: '黒豚',
+              secondItem: '黒毛和牛',
+              thirdItem: '黒さつま鶏',
+              fourthItem: '黒酢',
+              fifthItem: '黒米',
+              sixthItem: 'クロマグロ'
+            })
+          );
+        }
+        res.end();
+        break;
+      case 'POST':
+        let rawData = '';
+        req.on('data', chunk => {
+            rawData = rawData + chunk;
+          }).on('end', () => {
+            const qs = require('querystring');
+            const answer = qs.parse(rawData);
+            const body = answer['chiiki']+'の'+
+              answer['ニックネーム'] + 'さんが、<br>'+
+              answer['favorite'] + 'をお選びくださいました。<br>ありがとうございました！';
+            console.info(body);
+            res.write('<!DOCTYPE html><html lang="ja"><style>body{background-color:#FF9872;}</style><body><h1 align="center">' +
+              body + '</h1></body></html>');
+            res.end();
+          });
+        break;
+      default:
+        break;
+    }
+  })
+  .on('error', e => {
+    console.error('Server Error', e);
+  })
+  .on('clientError', e => {
+    console.error('Client Error', e);
+  });
+const port = process.env.PORT || 8000;
+
+server.listen(port, () => {
+  console.info('Listening on ' + port);
+});
